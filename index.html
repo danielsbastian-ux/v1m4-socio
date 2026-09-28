@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pidgins &amp; Creoles — Video Lesson &amp; Quiz</title>
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#eef1f8; --card:#ffffff; --ink:#16202e; --muted:#66748b;
+  --accent:#4f46e5; --accent-dark:#4338ca; --accent-soft:#eef2ff;
+  --accent-line:#c7d2fe; --ok:#15803d; --ok-soft:#ecfdf5;
+  --err:#b91c1c; --err-soft:#fef2f2; --line:#e3e8f0;
+  --radius:16px; --shadow:0 10px 30px rgba(22,32,46,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink); line-height:1.6;
+  background: radial-gradient(1100px 480px at 50% -220px, #dfe6ff 0%, transparent 62%), var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:32px 18px 80px}
+
+/* ---------- Hero ---------- */
+.hero{margin-bottom:14px}
+.eyebrow{margin:0 0 6px;font-size:.74rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
+.eyebrow.ok{color:var(--ok)}
+.hero h1{margin:0 0 8px;font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.15;letter-spacing:-.02em}
+.sub{margin:0;color:var(--muted);max-width:62ch;font-size:.98rem}
+
+/* ---------- Signed-in chip ---------- */
+.student-chip{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.82rem;color:var(--muted);
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;margin:0 0 18px;
+}
+.student-chip strong{color:var(--ink)}
+.link-btn{
+  background:none;border:none;font:inherit;font-size:.82rem;font-weight:650;
+  color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:2px;
+}
+.link-btn:hover{color:var(--accent-dark)}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;margin-bottom:22px;
+}
+
+/* ---------- Video ---------- */
+.video-shell{border-radius:12px;overflow:hidden;background:#0b1220;box-shadow:0 6px 22px rgba(11,18,32,.28)}
+.video-shell video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#0b1220;cursor:pointer;outline:none}
+.video-shell video:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+
+.video-bar{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center;justify-content:space-between;margin-top:14px}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+.ctrl-btn{
+  font:inherit;font-size:.85rem;font-weight:650;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 14px;border-radius:11px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);cursor:pointer;
+  transition:background .15s,border-color .15s,transform .1s,box-shadow .15s;
+}
+.ctrl-btn:hover{background:var(--accent-soft);border-color:var(--accent-line)}
+.ctrl-btn:active{transform:translateY(1px)}
+.ctrl-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ctrl-btn.play{background:var(--accent);border-color:var(--accent);color:#fff;min-width:54px;box-shadow:0 6px 16px rgba(79,70,229,.3)}
+.ctrl-btn.play:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+.ctrl-btn.mute{min-width:48px;padding:9px 12px;font-size:1rem}
+
+.time{font-size:.82rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:2px}
+
+/* ---------- Volume ---------- */
+.volume-wrap{display:flex;align-items:center;gap:8px}
+.volume-slider{
+  width:78px;
+  accent-color:var(--accent);
+  cursor:pointer;
+  background:transparent;
+}
+.volume-slider:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+.speed-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.speed-label{font-size:.82rem;font-weight:650;color:var(--muted);margin-right:2px}
+.speed-btn{
+  font:inherit;font-size:.85rem;font-weight:650;padding:7px 15px;border-radius:999px;
+  cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);
+  transition:background .15s,border-color .15s,color .15s,box-shadow .15s;
+}
+.speed-btn:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.speed-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.speed-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.32)}
+.hint{flex-basis:100%;margin:2px 0 0;font-size:.8rem;color:var(--muted)}
+.hint.warn{color:#b45309;font-weight:650}
+
+/* ---------- Source credit ---------- */
+.source{
+  margin:14px 0 0;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  font-size:.8rem;
+  color:var(--muted);
+}
+.source a{color:var(--accent);text-decoration:none;font-weight:650}
+.source a:hover{text-decoration:underline}
+
+/* ---------- Quiz ---------- */
+.quiz-title{margin:0 0 6px;font-size:1.25rem;letter-spacing:-.01em}
+.quiz-sub{margin:0 0 20px;color:var(--muted);font-size:.9rem}
+.q{border:1px solid var(--line);border-radius:14px;padding:16px 16px 8px;margin-bottom:14px;background:#fcfdff}
+.q-text{margin:0 0 10px;font-weight:650;font-size:.96rem;line-height:1.45}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:8px;cursor:pointer;font-size:.93rem;transition:border-color .15s,background .15s,box-shadow .15s}
+.opt:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.opt input{accent-color:var(--accent);margin:3px 0 0;flex:none;width:16px;height:16px}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)}
+.opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Locked quiz panel ---------- */
+.lock{
+  text-align:center;
+  padding:34px 20px;
+  border:2px dashed var(--line);
+  border-radius:14px;
+  background:#fafbff;
+}
+.lock-icon{font-size:2rem;line-height:1;margin-bottom:12px}
+.lock p{margin:0;color:var(--muted);font-size:.94rem}
+.lock strong{color:var(--ink)}
+
+/* ---------- Buttons ---------- */
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.actions.center{justify-content:center}
+.btn{font:inherit;font-weight:650;font-size:.95rem;padding:12px 24px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:background .15s,border-color .15s,transform .1s,box-shadow .15s}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(79,70,229,.3)}
+.btn.primary:hover{background:var(--accent-dark)}
+.btn.ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:#f6f8fc;border-color:#cbd5e1}
+
+/* ---------- Feedback ---------- */
+.feedback{margin:16px 0 0;font-weight:650;font-size:.92rem;min-height:1.2em}
+.feedback.error{color:var(--err);background:var(--err-soft);border:1px solid #fecaca;padding:12px 15px;border-radius:12px}
+.feedback.success{color:var(--ok);background:var(--ok-soft);border:1px solid #bbf7d0;padding:12px 15px;border-radius:12px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.shake{animation:shake .42s ease}
+
+/* ---------- Success ---------- */
+.success-card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:46px 28px;text-align:center}
+.check-badge{width:78px;height:78px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;font-size:2.2rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#22c55e,#15803d);box-shadow:0 14px 30px rgba(21,128,61,.35);animation:pop .5s cubic-bezier(.2,1.5,.5,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.success-card h1{margin:0 0 10px;font-size:clamp(1.6rem,4vw,2.1rem);letter-spacing:-.02em}
+.success-card .sub{margin:0 auto 28px}
+.summary{list-style:none;margin:0 auto 32px;padding:0;max-width:430px;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:left}
+.summary li{display:flex;justify-content:space-between;gap:14px;padding:13px 17px;font-size:.92rem;background:#fff;border-bottom:1px solid var(--line)}
+.summary li:last-child{border-bottom:none}
+.summary span{color:var(--muted)}
+.ok-text{color:var(--ok)}
+
+/* ============================================================
+   GATE (name + email modal)
+   ============================================================ */
+.gate-overlay{
+  position:fixed;inset:0;
+  background:rgba(22,32,46,.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;z-index:1000;
+}
+.gate-overlay.is-open{display:flex}
+.gate-card{
+  background:#fff;border-radius:20px;
+  padding:32px 28px;max-width:420px;width:100%;
+  box-shadow:0 30px 70px rgba(11,18,32,.35);
+  animation:pop .4s cubic-bezier(.2,1.5,.5,1);
+}
+.gate-icon{font-size:2rem;margin-bottom:8px;line-height:1}
+.gate-card h2{margin:0 0 8px;font-size:1.35rem;letter-spacing:-.02em}
+.gate-text{margin:0 0 20px;color:var(--muted);font-size:.9rem}
+.gate-field{display:block;margin-bottom:14px}
+.gate-field span{display:block;font-size:.82rem;font-weight:650;margin-bottom:6px;color:var(--ink)}
+.gate-field input{
+  font:inherit;font-size:.95rem;width:100%;
+  padding:11px 14px;border:1px solid var(--line);border-radius:11px;
+  background:#fcfdff;transition:border-color .15s,box-shadow .15s,background .15s;
+}
+.gate-field input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(79,70,229,.15)}
+.gate-error{margin:0 0 12px;font-size:.84rem;font-weight:600;color:var(--err);min-height:1.1em}
+.gate-submit{width:100%}
+
+/* ---------- A11y ---------- */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     GATE — name + email before lesson
+     ========================================================= -->
+<div id="gateOverlay" class="gate-overlay is-open" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-card">
+    <div class="gate-icon" aria-hidden="true">🎓</div>
+    <h2 id="gateTitle">Before you begin</h2>
+    <p class="gate-text">
+      Please enter your name and email so we can record your progress.
+      You will receive a confirmation email once you finish watching.
+    </p>
+    <form id="gateForm" novalidate>
+      <label class="gate-field">
+        <span>Full name</span>
+        <input type="text" id="gateName" name="name" autocomplete="name" placeholder="Jane Doe" required />
+      </label>
+      <label class="gate-field">
+        <span>Email address</span>
+        <input type="email" id="gateEmail" name="email" autocomplete="email" placeholder="jane@example.com" required />
+      </label>
+      <p id="gateError" class="gate-error" role="alert" aria-live="polite"></p>
+      <button type="submit" class="btn primary gate-submit">Start lesson</button>
+    </form>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- =========================================================
+       LESSON PAGE
+       ========================================================= -->
+  <main id="lessonPage">
+
+    <header class="hero">
+      <p class="eyebrow">Lesson 4 · Pidgins &amp; Creoles</p>
+      <h1>Pidgins &amp; Creoles</h1>
+      <p class="sub">
+        Watch the video all the way through. When it finishes, the ten questions
+        will unlock automatically below.
+      </p>
+    </header>
+
+    <div id="studentChip" class="student-chip" hidden>
+      <span>Signed in as <strong id="chipName"></strong></span>
+      <button type="button" id="changeStudentBtn" class="link-btn">Change</button>
+    </div>
+
+    <!-- ---------- VIDEO ---------- -->
+    <section class="card">
+      <div class="video-shell">
+        <video id="lessonVideo" preload="metadata" playsinline tabindex="0">
+          <!-- ▼▼ REPLACE THIS PATH WITH YOUR OWN VIDEO FILE ▼▼ -->
+          <source src="Video/Pidgins-and-Creoles.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="video-bar">
+        <div class="controls">
+          <button type="button" id="rewindBtn" class="ctrl-btn" aria-label="Go back 10 seconds">⏪ 10s</button>
+          <button type="button" id="playPauseBtn" class="ctrl-btn play" aria-label="Play">▶</button>
+          <button type="button" id="forwardBtn" class="ctrl-btn" aria-label="Go forward 10 seconds">10s ⏩</button>
+
+          <div class="volume-wrap">
+            <button type="button" id="muteBtn" class="ctrl-btn mute" aria-label="Mute">🔊</button>
+            <input type="range" id="volumeSlider" class="volume-slider"
+                   min="0" max="1" step="0.01" value="1" aria-label="Volume" />
+          </div>
+
+          <span id="timeDisplay" class="time" aria-hidden="true">0:00 / 0:00</span>
+        </div>
+
+        <div class="speed-group" role="group" aria-label="Playback speed">
+          <span class="speed-label">Speed</span>
+          <button type="button" class="speed-btn active" data-rate="1">1×</button>
+          <button type="button" class="speed-btn" data-rate="1.5">1.5×</button>
+          <button type="button" class="speed-btn" data-rate="2">2×</button>
+        </div>
+
+        <p class="hint" id="videoHint">
+          Click the video to play or pause. Use the 10-second buttons to skip backwards or forwards.
+          Finish the video to unlock the questions.
+        </p>
+      </div>
+
+      <!-- ▼▼ EDIT THIS SOURCE CREDIT TO MATCH YOUR VIDEO ▼▼ -->
+      <p class="source">
+        Source:
+        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
+        — “Pidgins and Creoles: How New Languages Are Born.”
+      </p>
+    </section>
+
+    <!-- ---------- QUIZ ---------- -->
+    <section class="card" id="quizCard">
+
+      <!-- Locked notice (shown until the video ends) -->
+      <div id="quizLock" class="lock" role="status" aria-live="polite">
+        <div class="lock-icon" aria-hidden="true">🔒</div>
+        <p>
+          <strong>The questions are locked.</strong><br />
+          Watch the video to the end and they will appear here automatically.
+        </p>
+      </div>
+
+      <form id="quiz" novalidate hidden>
+        <h2 class="quiz-title">Check your understanding</h2>
+        <p class="quiz-sub">
+          Choose one answer for every question. You must answer
+          <strong>all of them correctly</strong> before you can finish the lesson.
+          The quiz will not tell you which answers are wrong.
+        </p>
+
+        <!-- Q1 -->
+        <div class="q" role="radiogroup" aria-labelledby="q1t">
+          <p class="q-text" id="q1t">1. According to the video, Pidgins and Creoles are:</p>
+          <label class="opt"><input type="radio" name="q1" value="A" /><span>A. two specific languages</span></label>
+          <label class="opt"><input type="radio" name="q1" value="B" /><span>B. dialects of English</span></label>
+          <label class="opt"><input type="radio" name="q1" value="C" /><span>C. categories of languages</span></label>
+          <label class="opt"><input type="radio" name="q1" value="D" /><span>D. dead languages</span></label>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q" role="radiogroup" aria-labelledby="q2t">
+          <p class="q-text" id="q2t">2. What is the main difference between pidgins and creoles?</p>
+          <label class="opt"><input type="radio" name="q2" value="A" /><span>A. Pidgins have native speakers; creoles do not.</span></label>
+          <label class="opt"><input type="radio" name="q2" value="B" /><span>B. Pidgins have no native speakers; creoles have native speakers.</span></label>
+          <label class="opt"><input type="radio" name="q2" value="C" /><span>C. Creoles are only used for trade.</span></label>
+          <label class="opt"><input type="radio" name="q2" value="D" /><span>D. Pidgins are always older than creoles.</span></label>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q" role="radiogroup" aria-labelledby="q3t">
+          <p class="q-text" id="q3t">3. Pidgins typically arise when:</p>
+          <label class="opt"><input type="radio" name="q3" value="A" /><span>A. speakers of different languages come into contact and need to communicate.</span></label>
+          <label class="opt"><input type="radio" name="q3" value="B" /><span>B. children learn two languages at home.</span></label>
+          <label class="opt"><input type="radio" name="q3" value="C" /><span>C. a language becomes extinct.</span></label>
+          <label class="opt"><input type="radio" name="q3" value="D" /><span>D. a government creates a national language.</span></label>
+        </div>
+
+        <!-- Q4 -->
+        <div class="q" role="radiogroup" aria-labelledby="q4t">
+          <p class="q-text" id="q4t">4. How does a pidgin usually form?</p>
+          <label class="opt"><input type="radio" name="q4" value="A" /><span>A. The dominant group learns the less dominant group’s full language.</span></label>
+          <label class="opt"><input type="radio" name="q4" value="B" /><span>B. Both groups create a completely equal mixed language.</span></label>
+          <label class="opt"><input type="radio" name="q4" value="C" /><span>C. Children are taught the language formally in school.</span></label>
+          <label class="opt"><input type="radio" name="q4" value="D" /><span>D. The less dominant group adopts basic vocabulary from the dominant language and basic grammar from its own native language.</span></label>
+        </div>
+
+        <!-- Q5 -->
+        <div class="q" role="radiogroup" aria-labelledby="q5t">
+          <p class="q-text" id="q5t">5. What is an expanded pidgin?</p>
+          <label class="opt"><input type="radio" name="q5" value="A" /><span>A. A pidgin that is used only for trade.</span></label>
+          <label class="opt"><input type="radio" name="q5" value="B" /><span>B. A pidgin that becomes a native language.</span></label>
+          <label class="opt"><input type="radio" name="q5" value="C" /><span>C. A pidgin that is used for all facets of life and passed down as a lingua franca.</span></label>
+          <label class="opt"><input type="radio" name="q5" value="D" /><span>D. A pidgin with no vocabulary from any dominant language.</span></label>
+        </div>
+
+        <!-- Q6 -->
+        <div class="q" role="radiogroup" aria-labelledby="q6t">
+          <p class="q-text" id="q6t">6. When does a pidgin become a creole?</p>
+          <label class="opt"><input type="radio" name="q6" value="A" /><span>A. When it becomes the native language of the next generation.</span></label>
+          <label class="opt"><input type="radio" name="q6" value="B" /><span>B. When it is written down.</span></label>
+          <label class="opt"><input type="radio" name="q6" value="C" /><span>C. When it is used only in schools.</span></label>
+          <label class="opt"><input type="radio" name="q6" value="D" /><span>D. When it loses all grammar.</span></label>
+        </div>
+
+        <!-- Q7 -->
+        <div class="q" role="radiogroup" aria-labelledby="q7t">
+          <p class="q-text" id="q7t">7. Why were African slaves often separated from people who spoke the same native language?</p>
+          <label class="opt"><input type="radio" name="q7" value="A" /><span>A. To help them learn English faster.</span></label>
+          <label class="opt"><input type="radio" name="q7" value="B" /><span>B. To encourage them to create a creole.</span></label>
+          <label class="opt"><input type="radio" name="q7" value="C" /><span>C. To make trade easier.</span></label>
+          <label class="opt"><input type="radio" name="q7" value="D" /><span>D. To prevent them from rebelling or making plans together.</span></label>
+        </div>
+
+        <!-- Q8 -->
+        <div class="q" role="radiogroup" aria-labelledby="q8t">
+          <p class="q-text" id="q8t">8. Which of the following is a French-based Creole with about 12 million native speakers?</p>
+          <label class="opt"><input type="radio" name="q8" value="A" /><span>A. Jamaican Creole</span></label>
+          <label class="opt"><input type="radio" name="q8" value="B" /><span>B. Haitian Creole</span></label>
+          <label class="opt"><input type="radio" name="q8" value="C" /><span>C. Bislama</span></label>
+          <label class="opt"><input type="radio" name="q8" value="D" /><span>D. Chavacano</span></label>
+        </div>
+
+        <!-- Q9 -->
+        <div class="q" role="radiogroup" aria-labelledby="q9t">
+          <p class="q-text" id="q9t">9. In the Bislama example, what does “finis” indicate?</p>
+          <label class="opt"><input type="radio" name="q9" value="A" /><span>A. That something is in the future.</span></label>
+          <label class="opt"><input type="radio" name="q9" value="B" /><span>B. That something belongs to someone.</span></label>
+          <label class="opt"><input type="radio" name="q9" value="C" /><span>C. That something has been accomplished or is already done.</span></label>
+          <label class="opt"><input type="radio" name="q9" value="D" /><span>D. That something is located in a town.</span></label>
+        </div>
+
+        <!-- Q10 -->
+        <div class="q" role="radiogroup" aria-labelledby="q10t">
+          <p class="q-text" id="q10t">10. What do the Bislama examples show about Creole languages?</p>
+          <label class="opt"><input type="radio" name="q10" value="A" /><span>A. They are exactly the same as their parent language.</span></label>
+          <label class="opt"><input type="radio" name="q10" value="B" /><span>B. They have no connection to English.</span></label>
+          <label class="opt"><input type="radio" name="q10" value="C" /><span>C. They are only spoken in Europe.</span></label>
+          <label class="opt"><input type="radio" name="q10" value="D" /><span>D. They use words from English but arrange and use them very differently.</span></label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">Submit answers</button>
+          <button type="reset" class="btn ghost" id="resetBtn">Clear answers</button>
+        </div>
+
+        <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       SUCCESS / LANDING PAGE
+       ========================================================= -->
+  <section id="successPage" hidden>
+    <div class="success-card">
+      <div class="check-badge" aria-hidden="true">✓</div>
+      <p class="eyebrow ok">Lesson 10 · Complete</p>
+      <h1>Well done — you passed!</h1>
+      <p class="sub" id="successSub">
+        You answered all 10 questions about Pidgins &amp; Creoles correctly.
+      </p>
+
+      <ul class="summary">
+        <li><span>Questions answered correctly</span><strong>10 / 10</strong></li>
+        <li><span>Attempts used</span><strong id="attemptStat">1</strong></li>
+        <li><span>Status</span><strong class="ok-text">Passed</strong></li>
+      </ul>
+
+      <div class="actions center">
+        <button type="button" class="btn primary" id="backBtn">Back to the lesson</button>
+        <button type="button" class="btn ghost" id="restartBtn">Start over</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ==========================================================
+     CONFIG — paste your Apps Script Web App URL here
+     ========================================================== */
+  var CONFIG = {
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbylxuhdIlV0kdEtQG4oA1FVeBFNxhG2DI_YDbj0Nxc3Frl74rNLObbjYiMmX_0px66pqw/exec',
+    LESSON_ID:  'Lesson 10 · Pidgins & Creoles'
+  };
+
+  /* ==========================================================
+     ANSWER KEY — the only place correct answers live
+     ========================================================== */
+  var ANSWER_KEY = {
+    q1:  'C',
+    q2:  'B',
+    q3:  'A',
+    q4:  'D',
+    q5:  'C',
+    q6:  'A',
+    q7:  'D',
+    q8:  'B',
+    q9:  'C',
+    q10: 'D'
+  };
+
+  var TOTAL_QUESTIONS = Object.keys(ANSWER_KEY).length; // 10
+  var SKIP_SECONDS    = 10;
+
+  /* ==========================================================
+     ELEMENT REFERENCES
+     ========================================================== */
+  var video        = document.getElementById('lessonVideo');
+  var playPauseBtn = document.getElementById('playPauseBtn');
+  var rewindBtn    = document.getElementById('rewindBtn');
+  var forwardBtn   = document.getElementById('forwardBtn');
+  var muteBtn      = document.getElementById('muteBtn');
+  var volumeSlider = document.getElementById('volumeSlider');
+  var timeDisplay  = document.getElementById('timeDisplay');
+  var videoHint    = document.getElementById('videoHint');
+  var speedBtns    = Array.prototype.slice.call(document.querySelectorAll('.speed-btn'));
+
+  var quizCard     = document.getElementById('quizCard');
+  var quizLock     = document.getElementById('quizLock');
+  var quizForm     = document.getElementById('quiz');
+  var feedback     = document.getElementById('feedback');
+
+  var lessonPage   = document.getElementById('lessonPage');
+  var successPage  = document.getElementById('successPage');
+  var attemptStat  = document.getElementById('attemptStat');
+  var successSub   = document.getElementById('successSub');
+  var backBtn      = document.getElementById('backBtn');
+  var restartBtn   = document.getElementById('restartBtn');
+
+  var gateOverlay  = document.getElementById('gateOverlay');
+  var gateForm     = document.getElementById('gateForm');
+  var gateName     = document.getElementById('gateName');
+  var gateEmail    = document.getElementById('gateEmail');
+  var gateError    = document.getElementById('gateError');
+
+  var studentChip  = document.getElementById('studentChip');
+  var chipName     = document.getElementById('chipName');
+  var changeStudentBtn = document.getElementById('changeStudentBtn');
+
+  /* ==========================================================
+     STATE
+     ========================================================== */
+  var attempts    = 0;
+  var passed      = false;
+  var watchLogged = false;
+  var unlocked    = false;
+  var student     = { name:'', email:'' };
+
+  /* ==========================================================
+     GATE — name + email
+     ========================================================== */
+  function openGate() {
+    gateOverlay.classList.add('is-open');
+    gateName.value  = student.name  || '';
+    gateEmail.value = student.email || '';
+    gateError.textContent = '';
+    setTimeout(function(){ gateName.focus(); }, 80);
+  }
+  function closeGate() { gateOverlay.classList.remove('is-open'); }
+
+  function showChip() {
+    if (student.name) {
+      chipName.textContent = student.name + ' · ' + student.email;
+      studentChip.hidden = false;
+    } else {
+      studentChip.hidden = true;
+    }
+  }
+
+  // Restore previous sign-in from localStorage
+  try {
+    var saved = JSON.parse(localStorage.getItem('pidgins_student') || 'null');
+    if (saved && saved.name && saved.email) {
+      student = saved;
+      closeGate();
+      showChip();
+    }
+  } catch (e) { /* ignore */ }
+
+  // Keep the video paused while the gate is open
+  function lockVideoWhileGateOpen() {
+    if (gateOverlay.classList.contains('is-open')) {
+      try { video.pause(); } catch (e) {}
+    }
+  }
+  setInterval(lockVideoWhileGateOpen, 400);
+
+  gateForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name  = gateName.value.trim();
+    var email = gateEmail.value.trim();
+
+    if (name.length < 2) {
+      gateError.textContent = 'Please enter your full name.';
+      gateName.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      gateError.textContent = 'Please enter a valid email address.';
+      gateEmail.focus();
+      return;
+    }
+
+    student = { name: name, email: email };
+    try { localStorage.setItem('pidgins_student', JSON.stringify(student)); } catch (err) {}
+
+    gateError.textContent = '';
+    closeGate();
+    showChip();
+    watchLogged = false;
+  });
+
+  changeStudentBtn.addEventListener('click', openGate);
+
+  /* ==========================================================
+     BACKEND — send to Google Apps Script
+     ========================================================== */
+  function backendConfigured() {
+    return typeof CONFIG.SCRIPT_URL === 'string' &&
+           CONFIG.SCRIPT_URL.indexOf('https://script.google.com/') === 0;
+  }
+
+  function sendToBackend(action, extra) {
+    if (!backendConfigured()) {
+      console.warn('[Backend] SCRIPT_URL not set. Skipping action:', action, extra);
+      return Promise.resolve({ ok:false, skipped:true });
+    }
+    if (!student.email) {
+      console.warn('[Backend] No student email. Skipping action:', action);
+      return Promise.resolve({ ok:false, skipped:true });
+    }
+
+    var payload = {
+      action: action,
+      name: student.name,
+      email: student.email,
+      lesson: CONFIG.LESSON_ID
+    };
+    if (extra) {
+      for (var k in extra) {
+        if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
+      }
+    }
+
+    return fetch(CONFIG.SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      redirect: 'follow'
+    })
+    .then(function (res) { return res.text(); })
+    .then(function (text) {
+      try { return JSON.parse(text); }
+      catch (e) { return { ok: true, raw: text }; }
+    })
+    .catch(function (err) {
+      console.warn('[Backend] request failed:', err);
+      return { ok: false, error: String(err) };
+    });
+  }
+
+  /* ==========================================================
+     CUSTOM VIDEO CONTROLS
+     ========================================================== */
+  function togglePlay() {
+    if (gateOverlay.classList.contains('is-open')) return;
+    if (video.paused || video.ended) {
+      var p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(function(){});
+    } else {
+      video.pause();
+    }
+  }
+  function syncPlayIcon() {
+    var playing = !video.paused && !video.ended;
+    playPauseBtn.textContent = playing ? '❚❚' : '▶';
+    playPauseBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+
+  playPauseBtn.addEventListener('click', togglePlay);
+  video.addEventListener('click', togglePlay);
+  video.addEventListener('play',  syncPlayIcon);
+  video.addEventListener('pause', syncPlayIcon);
+  video.addEventListener('ended', syncPlayIcon);
+
+  function clampToDuration(t) {
+    if (isFinite(video.duration) && video.duration > 0) return Math.min(Math.max(t,0), video.duration);
+    return Math.max(t, 0);
+  }
+  rewindBtn.addEventListener('click',  function () { video.currentTime = clampToDuration(video.currentTime - SKIP_SECONDS); });
+  forwardBtn.addEventListener('click', function () { video.currentTime = clampToDuration(video.currentTime + SKIP_SECONDS); });
+
+  /* ---------- Volume ---------- */
+  function syncVolumeIcon() {
+    var muted = video.muted || video.volume === 0;
+    muteBtn.textContent = muted ? '🔇' : '🔊';
+    muteBtn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+  }
+
+  muteBtn.addEventListener('click', function () {
+    video.muted = !video.muted;
+    if (!video.muted && video.volume === 0) {
+      video.volume = 0.8;
+      volumeSlider.value = '0.8';
+    }
+    syncVolumeIcon();
+  });
+
+  volumeSlider.addEventListener('input', function () {
+    var v = parseFloat(volumeSlider.value);
+    video.volume = v;
+    if (v > 0 && video.muted) video.muted = false;
+    syncVolumeIcon();
+  });
+
+  video.addEventListener('volumechange', function () {
+    if (!video.muted) volumeSlider.value = String(video.volume);
+    syncVolumeIcon();
+  });
+
+  /* ---------- Time readout ---------- */
+  function formatTime(seconds) {
+    if (!isFinite(seconds) || seconds < 0) return '0:00';
+    var total = Math.floor(seconds);
+    var m = Math.floor(total / 60);
+    var s = total % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function updateTimeDisplay() {
+    timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+  }
+  video.addEventListener('timeupdate',     updateTimeDisplay);
+  video.addEventListener('loadedmetadata', updateTimeDisplay);
+  video.addEventListener('durationchange', updateTimeDisplay);
+  video.addEventListener('seeked',         updateTimeDisplay);
+
+  /* ---------- Keyboard shortcuts ---------- */
+  video.addEventListener('keydown', function (event) {
+    switch (event.key) {
+      case ' ': case 'k': case 'K':
+        event.preventDefault(); togglePlay(); break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        video.currentTime = clampToDuration(video.currentTime - SKIP_SECONDS); break;
+      case 'ArrowRight':
+        event.preventDefault();
+        video.currentTime = clampToDuration(video.currentTime + SKIP_SECONDS); break;
+      case 'm': case 'M':
+        event.preventDefault();
+        muteBtn.click(); break;
+    }
+  });
+
+  video.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+  /* ==========================================================
+     AUTO-PAUSE when the tab is hidden / minimised
+     ========================================================== */
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden && !video.paused && !video.ended) {
+      try { video.pause(); } catch (e) {}
+    }
+  });
+  window.addEventListener('blur', function () {
+    if (!video.paused && !video.ended) {
+      try { video.pause(); } catch (e) {}
+    }
+  });
+
+  /* ==========================================================
+     QUIZ UNLOCK — only after the video finishes
+     ========================================================== */
+  function unlockQuiz(shouldScroll) {
+    if (unlocked) return;
+    unlocked = true;
+
+    quizLock.hidden = true;
+    quizForm.hidden = false;
+
+    if (videoHint) {
+      videoHint.classList.remove('warn');
+      videoHint.textContent =
+        'Questions unlocked below. Answer all of them correctly to finish the lesson.';
+    }
+
+    if (shouldScroll) {
+      quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  video.addEventListener('ended', function () {
+    syncPlayIcon();
+    unlockQuiz(true);
+
+    if (watchLogged) return;
+    watchLogged = true;
+    sendToBackend('watch').then(function (res) {
+      if (res && res.ok) console.log('[Backend] watch logged');
+      else               console.warn('[Backend] watch not logged', res);
+    });
+  });
+
+  // Safety net: if the video file can't load, still unlock
+  video.addEventListener('error', function () {
+    if (videoHint) {
+      videoHint.classList.add('warn');
+      videoHint.textContent =
+        'Video could not be loaded — check the file path. The questions have been unlocked.';
+    }
+    unlockQuiz(false);
+  }, true);
+
+  /* ==========================================================
+     PLAYBACK SPEED
+     ========================================================== */
+  speedBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var rate = parseFloat(btn.dataset.rate) || 1;
+      try { video.playbackRate = rate; } catch (err) {}
+      speedBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
+  });
+  video.addEventListener('ratechange', function () {
+    var current = video.playbackRate;
+    speedBtns.forEach(function (b) {
+      var r = parseFloat(b.dataset.rate);
+      b.classList.toggle('active', Math.abs(r - current) < 0.01);
+    });
+  });
+
+  /* ==========================================================
+     FEEDBACK
+     ========================================================== */
+  function setFeedback(message, type) {
+    feedback.textContent = message;
+    feedback.className = 'feedback' + (type ? ' ' + type : '');
+    if (type === 'error') {
+      feedback.classList.remove('shake');
+      void feedback.offsetWidth;
+      feedback.classList.add('shake');
+    }
+  }
+
+  /* ==========================================================
+     QUIZ SUBMIT — grading logic
+     ========================================================== */
+  quizForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    if (!unlocked) return;
+    if (passed) return;
+
+    attempts += 1;
+
+    var data  = new FormData(quizForm);
+    var wrong = 0;
+    var blank = 0;
+    var answers = {};
+
+    Object.keys(ANSWER_KEY).forEach(function (name) {
+      var picked = data.get(name);
+      answers[name] = picked || '';
+      if (!picked)                          { blank += 1; wrong += 1; }
+      else if (picked !== ANSWER_KEY[name]) { wrong += 1; }
+    });
+
+    /* ---------- ALL CORRECT → landing page ---------- */
+    if (wrong === 0) {
+      passed = true;
+      setFeedback('All answers are correct. Loading your results…', 'success');
+
+      sendToBackend('pass', {
+        attempts: attempts,
+        score: TOTAL_QUESTIONS + '/' + TOTAL_QUESTIONS,
+        answers: answers
+      }).then(function (res) {
+        if (res && res.ok) console.log('[Backend] pass logged');
+        else               console.warn('[Backend] pass not logged', res);
+      });
+
+      window.setTimeout(function () {
+        lessonPage.hidden  = true;
+        successPage.hidden = false;
+        attemptStat.textContent = String(attempts);
+
+        if (student.name) {
+          successSub.textContent =
+            'Great job, ' + student.name + '! You answered all ' + TOTAL_QUESTIONS +
+            ' questions about Pidgins & Creoles correctly. ' +
+            'A confirmation email is on its way to ' + student.email + '.';
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 550);
+      return;
+    }
+
+    /* ---------- SOMETHING WRONG → never reveal what ---------- */
+    var message = 'Some of your answers are still incorrect. ';
+    if (blank > 0) {
+      message += 'You also left ' + blank +
+                 (blank === 1 ? ' question' : ' questions') + ' unanswered. ';
+    }
+    message += 'Rewatch the video and try again.';
+    setFeedback(message, 'error');
+  });
+
+  /* ==========================================================
+     RESET
+     ========================================================== */
+  quizForm.addEventListener('reset', function () {
+    feedback.textContent = '';
+    feedback.className = 'feedback';
+  });
+
+  /* ==========================================================
+     SUCCESS PAGE ACTIONS
+     ========================================================== */
+  backBtn.addEventListener('click', function () {
+    successPage.hidden = true;
+    lessonPage.hidden  = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  restartBtn.addEventListener('click', function () { window.location.reload(); });
+
+  /* ==========================================================
+     INIT
+     ========================================================== */
+  syncPlayIcon();
+  syncVolumeIcon();
+  updateTimeDisplay();
+  showChip();
+
+  if (!backendConfigured()) {
+    console.warn('[Backend] CONFIG.SCRIPT_URL is still the placeholder. ' +
+                 'Emails and Google Sheet logging are disabled until you paste your Web App URL.');
+  }
+})();
+</script>
+</body>
+</html>
